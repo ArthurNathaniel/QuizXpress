@@ -1,7 +1,20 @@
 <?php
 include 'db.php';
+session_start();
 
-// Fetch classes and subjects from the database
+// Check if the teacher is logged in
+if (!isset($_SESSION['teacher_id'])) {
+    header("Location: teacher_login.php");
+    exit();
+}
+
+// Fetch teacher details
+$teacher_id = $_SESSION['teacher_id'];
+$teacher_result = $conn->query("SELECT full_name FROM teachers WHERE id = $teacher_id");
+$teacher = $teacher_result->fetch_assoc();
+$teacher_name = $teacher['full_name'];
+
+// Fetch classes and subjects assigned to the logged-in teacher
 $classes_result = $conn->query("SELECT * FROM classes ORDER BY class_name ASC");
 $subjects_result = $conn->query("SELECT * FROM subjects ORDER BY subject_name ASC");
 
@@ -16,9 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $deadline = $_POST['deadline'];
     $duration = $_POST['duration']; // Duration for the quiz
 
-    // Insert quiz into database
-    $stmt = $conn->prepare("INSERT INTO quizzes (quiz_title, questions, options, correct_answers, assigned_class, assigned_subject, deadline, duration) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssss", $quiz_title, json_encode($questions), json_encode($options), json_encode($correct_answers), $assigned_class, $assigned_subject, $deadline, $duration);
+    // Insert quiz into the database
+    $stmt = $conn->prepare("INSERT INTO quizzes (quiz_title, questions, options, correct_answers, assigned_class, assigned_subject, deadline, duration, teacher_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssssssi", $quiz_title, json_encode($questions), json_encode($options), json_encode($correct_answers), $assigned_class, $assigned_subject, $deadline, $duration, $teacher_id);
 
     if ($stmt->execute()) {
         echo "<script>alert('Quiz created successfully!');</script>";
@@ -44,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <?php include 'teachers_navbar.php'?>
     <div class="quiz_all">
         <h2>Create Quiz</h2>
+        <p><strong>Teacher:</strong> <?php echo $teacher_name; ?></p>
         <form id="quizForm" action="" method="POST">
             <div class="forms">
                 <label for="quiz_title">Quiz Title</label>
@@ -77,15 +91,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </select>
                     </div>
 
-
                     <div class="actions_btns">
-                        <button type="button" onclick="addQuestion()">Add Another Question</button>
-                        <button type="button" class="remove-button" onclick="removeQuestion(1)">Remove Question</button>
-
+                        <button type="button" class="add_questions" onclick="addQuestion()">Add Another Question</button>
+                        <button type="button" class="remove-button" onclick="removeQuestion(1)"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
             </div>
-
 
             <div class="forms">
                 <label for="assigned_subject">Assign Subject</label>
@@ -145,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="text" name="options[${questionCount - 1}][]" placeholder="C. Option 3" required>
                 <input type="text" name="options[${questionCount - 1}][]" placeholder="D. Option 4" required>
   </div>
-                  <div class="forms ">
+                  <div class="forms">
                 <label for="correct_answer">Correct Answer</label>
                 <select name="correct_answers[]" required>
                     <option value="" selected hidden>Select Answer</option>
@@ -156,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </select>
   </div>
                   <div class="actions_btns">
-                <button type="button" class="remove-button" onclick="removeQuestion(${questionCount})">Remove Question</button>
+                <button type="button" class="remove-button" onclick="removeQuestion(${questionCount})"><i class="fa-solid fa-trash"></i></button>
              </div>
               `;
             questionsContainer.appendChild(questionBlock);

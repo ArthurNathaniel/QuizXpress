@@ -164,3 +164,16 @@
     color: #fff;
   }
   
+  .add_questions{
+padding: 15px 45px;
+    background-color: #4f5de4;
+    border: none;
+    color: #fff;
+  }
+
+  .remove-button{
+    background-color: transparent !important;
+    border: none !important;
+    color: #dc3545 !important;
+    font-size: 25px !important;
+  }
