@@ -1,0 +1,33 @@
+.teachers_dashboard{
+    padding: 0 7%;
+    margin-top: 50px;
+}
+
+.students{
+    margin-top: 50px;
+    border: 2px dashed #f57005; 
+    padding: 0 5%;
+    padding-block: 30px;
+    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+.chart_grid{
+  
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.chart{
+    border: 2px dashed #f57005; 
+    margin-top: 50px;
+    padding: 0 5%;
+    padding-block: 30px;
+    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+
+@media only screen and (max-width: 1110px) {
+    .chart_grid{
+        display: flex;
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,34 @@
+.view_students_all{
+    padding: 0 10%;
+    margin-top: 50px;
+}
+
+.view_students_all table{
+    margin-top: 30px;
+}
+
+.view_students_all table th{
+    background-color: #4f5de4;
+    color: #fff;
+}
+
+.action_btn{
+    display: flex;
+    justify-content: space-between;
+    gap:30px; 
+    height: 100%;
+}
+
+.action_btn button{
+    background-color: transparent;
+    border: none;
+ 
+}
+
+.action_btn button {
+    color: #4f5de4;
+}
+
+.fa-trash{
+    color: red;
+}
